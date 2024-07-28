@@ -28,7 +28,6 @@ class APIFilters {
         }
       } else {
         delete this.queryStr[key];
-        console.log(this.copyQueryStr);
       }
     }
 
@@ -39,8 +38,6 @@ class APIFilters {
     this.query = this.query.find({
       ...obj,
     });
-
-    // console.log(`queryCopy 1.................`, this.query._conditions);
     return this;
   }
 
@@ -58,24 +55,18 @@ class APIFilters {
       (match) => `$${match}`
     );
 
-    // console.log(jsonString)
-
     this.query = this.query.find(JSON.parse(jsonString));
 
-    console.log(
-      `queryCopy 2.................`,
-      JSON.stringify(this.query._conditions)
-    );
     return this;
   }
 
-  pagination(page, skipCount) {
-    const currentPage = Number(page) || 1;
-    const skip = skipCount * Number(currentPage - 1);
+  pagination() {
+    const currentPage = Number(this.copyQueryStr.page) || 1;
+    const skip = Number(this.copyQueryStr.skipCount) * Number(currentPage - 1);
 
-    this.query = this.query.limit(skipCount).skip(skip);
+    this.query = this.query.limit(this.copyQueryStr.skipCount).skip(skip);
 
-    return this
+    return this;
   }
 
   // {

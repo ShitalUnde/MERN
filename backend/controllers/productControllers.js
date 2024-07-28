@@ -9,16 +9,16 @@ import APIFilters from "../utils/apiFilters.js";
 export const getProducts = async (req, res) => {
   const exceptionalKeys = ["price", "ratings"];
 
-  const apiFilter = new APIFilters(Product, req.query, exceptionalKeys, "$or")
+  const apiFilters = new APIFilters(Product, req.query, exceptionalKeys, "$or")
     .search()
     .filters();
 
-  let products = await apiFilter.query;
+  let products = await apiFilters.query;
 
-  apiFilter.pagination(req.query.page, req.query.skipCount);
-  
-   products = await apiFilter.query;
-  res.status(200).json({ totalRecords: products.length, products });
+  apiFilters.pagination();
+
+  let product = await apiFilters.query.clone();
+  res.status(200).json({ totalRecords: products.length, product });
 };
 
 //get product by Id
