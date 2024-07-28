@@ -10,7 +10,6 @@ import dbConnect from "./config/dbConnect.js";
 import errorsMiddleware from "./middleware/errors.js";
 //connecting to db
 process.on("uncaughtException", (err) => {
-  console.log(err)
   process.exit(1);
 });
 
@@ -23,8 +22,6 @@ const PORT = process.env.PORT || 3000;
 app.use("/api/v1", productRoutes);
 
 //always after end point
-
-// console.log(helo);
 
 app.use(errorsMiddleware);
 

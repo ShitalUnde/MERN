@@ -3,11 +3,22 @@ import Product from "../models/product.js";
 
 import catchAsyncErrors from "../middleware/catchAsyncErrors.js";
 import ErrorHandler from "../utils/errorHandler.js";
+import APIFilters from "../utils/apiFilters.js";
 
 //get all products => api/v1/products
 export const getProducts = async (req, res) => {
-  const product = await Product.find();
-  res.send(product);
+  const exceptionalKeys = ["price", "ratings"];
+
+  const apiFilter = new APIFilters(Product, req.query, exceptionalKeys, "$or")
+    .search()
+    .filters();
+
+  let products = await apiFilter.query;
+
+  apiFilter.pagination(req.query.page, req.query.skipCount);
+  
+   products = await apiFilter.query;
+  res.status(200).json({ totalRecords: products.length, products });
 };
 
 //get product by Id
