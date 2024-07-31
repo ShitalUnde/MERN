@@ -6,7 +6,7 @@ import ErrorHandler from "../utils/errorHandler.js";
 import APIFilters from "../utils/apiFilters.js";
 
 //get all products => api/v1/products
-export const getProducts = async (req, res) => {
+export const getProducts = catchAsyncErrors(async (req, res, next) => {
   const exceptionalKeys = ["price", "ratings"];
 
   const apiFilters = new APIFilters(Product, req.query, exceptionalKeys, "$or")
@@ -14,12 +14,11 @@ export const getProducts = async (req, res) => {
     .filters();
 
   let products = await apiFilters.query;
-
   apiFilters.pagination();
 
   let product = await apiFilters.query.clone();
   res.status(200).json({ totalRecords: products.length, product });
-};
+});
 
 //get product by Id
 export const getProductById = catchAsyncErrors(async (req, res, next) => {

@@ -2,9 +2,9 @@ import dotenv from "dotenv";
 import express from "express";
 const app = express();
 
-
 dotenv.config({ path: "./config/config.env" });
 import productRoutes from "./routes/products.js";
+import authRoutes from "./routes/auth.js";
 
 import dbConnect from "./config/dbConnect.js";
 import errorsMiddleware from "./middleware/errors.js";
@@ -13,13 +13,13 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-
 dbConnect();
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
 app.use("/api/v1", productRoutes);
+app.use("/api/v1", authRoutes);
 
 //always after end point
 

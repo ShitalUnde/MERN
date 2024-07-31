@@ -12,7 +12,7 @@ export default (err, req, res, next) => {
     error = new ErrorHandler(message, 404);
   }
 
-  console.log(err.name)
+  console.log(`err name`,err.name)
 
   if (err.name === "ValidationError") {
     const messages = Object.values(err.errors).map((value) => value.message);
