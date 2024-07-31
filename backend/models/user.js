@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import becrypt from 'bcryptjs'
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -33,5 +35,14 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre('save', async function (next) {
+  // check current pass and pass in database are same or not 
+  // if not same then it decrypt it 
+  if(!this.isModified('password')){
+    next(); // move to next middleware or operation
+  }
+  this.password = await becrypt.hash(this.password, 10)
+})
 
 export default mongoose.model("User", userSchema);
